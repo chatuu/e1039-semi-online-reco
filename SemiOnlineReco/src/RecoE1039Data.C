@@ -47,6 +47,11 @@ int RecoE1039Data(const int run_id, const std::string DST_in="data.root", const 
   //rc->set_CharFlag("AlignmentProp", "");
   //rc->set_CharFlag("Calibration", "");
 
+  rc->set_CharFlag("AlignmentMille", "$E1039_RESOURCE/alignment/dummy/align_mille.txt");
+  rc->set_CharFlag("AlignmentHodo", "$E1039_RESOURCE/alignment/dummy/alignment_hodo.txt");
+  rc->set_CharFlag("AlignmentProp", "$E1039_RESOURCE/alignment/dummy/alignment_prop.txt");
+  rc->set_CharFlag("Calibration", "$E1039_RESOURCE/alignment/dummy/calibration.txt");
+
   rc->Print();
 
   Fun4AllServer* se = Fun4AllServer::instance();
@@ -67,6 +72,7 @@ int RecoE1039Data(const int run_id, const std::string DST_in="data.root", const 
   reco->set_evt_reducer_opt("none"); //if not provided, event reducer will be using JobOptsSvc to intialize; to turn off, set it to "none"
 
   reco->set_enable_eval_dst(true); // Added to avoid processing errors
+  reco->add_eval_list(3);
 
   reco->set_enable_eval(true);
   reco->set_eval_file_name("eval.root");
