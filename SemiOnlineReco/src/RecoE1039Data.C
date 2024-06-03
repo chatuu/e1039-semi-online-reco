@@ -21,7 +21,7 @@ int RecoE1039Data(const int run_id, const std::string DST_in="data.root", const 
 {
   const bool cosmic = false;
 
-  const bool legacy_rec_container = false;
+  const bool legacy_rec_container = true;
   const double FMAGSTR = -1.044;
   const double KMAGSTR = -1.025;
 
