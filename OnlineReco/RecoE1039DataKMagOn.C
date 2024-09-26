@@ -68,7 +68,7 @@ int RecoE1039DataKMagOn(const int runID, const int spillID, std::string infile =
   //printf("final: %i",int(140/fac));
   //printf("final: %i",int(140/fac)); // This is the end line to set occupancy. Talk to Kun
 
-  // Defining Occupancy requirement. if fac==1
+  // Defining Occupancy requirement. if fac==1, then Occupancy become the default occupancy used by SeaQuest experiment
   rc->set_IntFlag("MaxHitsDC0" , int(350/fac)); // number of hits per chamber. Suggestion make it half
   rc->set_IntFlag("MaxHitsDC1" , int(350/fac));
   rc->set_IntFlag("MaxHitsDC2" , int(170/fac));
