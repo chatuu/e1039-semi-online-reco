@@ -48,6 +48,8 @@ int RecoE1039DataKMagOn(const int runID, const int spillID, std::string infile =
   std::cout << "Start Time: " << std::asctime(std::localtime(&currentTime));
  
   std::string dest_path = "/data4/e1039_data/semi_online_reco/kmag-on/test/coarseFalse/run_" + std::to_string(runID) + "/spill_" + std::to_string(spillID) + "/";
+  //std::string dest_path = "/seaquest/users/spinquestpro/github/e1039-semi-online-reco/OnlineReco/";
+  
   std::string outfile = dest_path + "DST.root";
   std::string evalloc = dest_path + "eval.root";
   std::string vtxevalloc = dest_path + "vtx_eval.root";
@@ -84,11 +86,20 @@ int RecoE1039DataKMagOn(const int runID, const int spillID, std::string infile =
   }
 
   rc->set_BoolFlag("COARSE_MODE", false);
+  rc->set_BoolFlag("REQUIRE_MUID", false);
   
   rc->set_CharFlag("AlignmentMille", "$E1039_RESOURCE2/dummy/align_mille.txt");
   rc->set_CharFlag("AlignmentHodo", "$E1039_RESOURCE2/dummy/alignment_hodo.txt");
   rc->set_CharFlag("AlignmentProp", "$E1039_RESOURCE2/dummy/alignment_prop.txt");
   rc->set_CharFlag("Calibration", "$E1039_RESOURCE2/dummy/calibration.txt");
+
+  /********************************************/
+  rc->set_DoubleFlag("RejectWinDC0", 0.3);
+  rc->set_DoubleFlag("RejectWinDC1", 0.5);
+  rc->set_DoubleFlag("RejectWinDC2", 0.35);
+  rc->set_DoubleFlag("RejectWinDC3p", 0.24);
+  rc->set_DoubleFlag("RejectWinDC3m", 0.24);
+  /********************************************/
 
   rc->Print();
 
