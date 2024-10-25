@@ -1,3 +1,13 @@
+/**
+ * @file RecoE1039DataKMagOn.C
+ * @author Chatura Kuruppu (ckuruppu@fnal.gov)
+ * @brief This script is made to run the reconstruction with K-Mag On
+ * @version 0.1
+ * @date 2024-09-26
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 #include <iostream>
 #include <ctime>
 #include <TSystem.h>
@@ -18,16 +28,28 @@ This is an example script intended to demonstrate how to run SQReco in a minimal
 suitable for production use and users should develop their own reconstruction macro for their own analysis.
 */
 
+
+/**
+ * @brief This function is created to run K-Mag on condition
+ * 
+ * @param runID const int run number
+ * @param spillID const int spill number
+ * @param infile  std::string input file with path
+ * @param fac const float division factor for occupancy
+ * @return int exit status. Must be 0 for proper reconstruction
+ */
 int RecoE1039DataKMagOn(const int runID, const int spillID, std::string infile = "./fileset/digit_run_028694_spill_001415238.root", const float fac=4.0)
 {
 
-    // Get the current time
-    std::time_t currentTime = std::time(nullptr);
+  // Get the current time
+  std::time_t currentTime = std::time(nullptr);
 
-    // Convert the time to a string
-    std::cout << "Start Time: " << std::asctime(std::localtime(&currentTime));
+  // Convert the time to a string
+  std::cout << "Start Time: " << std::asctime(std::localtime(&currentTime));
  
   std::string dest_path = "/data4/e1039_data/semi_online_reco/kmag-on/test/coarseFalse/run_" + std::to_string(runID) + "/spill_" + std::to_string(spillID) + "/";
+  //std::string dest_path = "/seaquest/users/spinquestpro/github/e1039-semi-online-reco/OnlineReco/";
+  
   std::string outfile = dest_path + "DST.root";
   std::string evalloc = dest_path + "eval.root";
   std::string vtxevalloc = dest_path + "vtx_eval.root";
@@ -48,7 +70,7 @@ int RecoE1039DataKMagOn(const int runID, const int spillID, std::string infile =
   //printf("final: %i",int(140/fac));
   //printf("final: %i",int(140/fac)); // This is the end line to set occupancy. Talk to Kun
 
-
+  // Defining Occupancy requirement. if fac==1, then Occupancy become the default occupancy used by SeaQuest experiment
   rc->set_IntFlag("MaxHitsDC0" , int(350/fac)); // number of hits per chamber. Suggestion make it half
   rc->set_IntFlag("MaxHitsDC1" , int(350/fac));
   rc->set_IntFlag("MaxHitsDC2" , int(170/fac));
@@ -64,18 +86,20 @@ int RecoE1039DataKMagOn(const int runID, const int spillID, std::string infile =
   }
 
   rc->set_BoolFlag("COARSE_MODE", false);
-  //rc->set_DoubleFlag("KMAGSTR", 0.);
-  //rc->set_BoolFlag("KMAG_ON", false);
-
-  //rc->set_CharFlag("AlignmentMille", "");
-  //rc->set_CharFlag("AlignmentHodo", "");
-  //rc->set_CharFlag("AlignmentProp", "");
-  //rc->set_CharFlag("Calibration", "");
-
+  rc->set_BoolFlag("REQUIRE_MUID", false);
+  
   rc->set_CharFlag("AlignmentMille", "$E1039_RESOURCE2/dummy/align_mille.txt");
   rc->set_CharFlag("AlignmentHodo", "$E1039_RESOURCE2/dummy/alignment_hodo.txt");
   rc->set_CharFlag("AlignmentProp", "$E1039_RESOURCE2/dummy/alignment_prop.txt");
   rc->set_CharFlag("Calibration", "$E1039_RESOURCE2/dummy/calibration.txt");
+
+  /********************************************/
+  rc->set_DoubleFlag("RejectWinDC0", 0.3);
+  rc->set_DoubleFlag("RejectWinDC1", 0.5);
+  rc->set_DoubleFlag("RejectWinDC2", 0.35);
+  rc->set_DoubleFlag("RejectWinDC3p", 0.24);
+  rc->set_DoubleFlag("RejectWinDC3m", 0.24);
+  /********************************************/
 
   rc->Print();
 
@@ -92,10 +116,10 @@ int RecoE1039DataKMagOn(const int runID, const int spillID, std::string infile =
   se->registerSubsystem(cal_dd);
 
   SQReco* reco = new SQReco();
-  reco->Verbosity(999);
+  reco->Verbosity(0);
   reco->set_legacy_rec_container(legacy_rec_container);
-  reco->set_geom_file_name("geom.root");
-  reco->set_enable_KF(false); //Kalman filter not needed for the track finding, disabling KF saves a lot of initialization time
+  reco->set_geom_file_name((string)gSystem->Getenv("E1039_RESOURCE") + "/geometry/geom_run005433.root");
+  reco->set_enable_KF(true); //Kalman filter not needed for the track finding, disabling KF saves a lot of initialization time
   reco->setInputTy(SQReco::E1039);    //options are SQReco::E906 and SQReco::E1039
   reco->setFitterTy(SQReco::KFREF);  //not relavant for the track finding
   reco->set_evt_reducer_opt("none"); //if not provided, event reducer will be using JobOptsSvc to intialize; to turn off, set it to "none"
