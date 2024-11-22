@@ -140,9 +140,13 @@ int RecoE1039DataKMagOn(const int runID, const int spillID, std::string infile =
 
   se->registerSubsystem(reco);
 
-  VertexFit* vtx_fit = new VertexFit();
-  vtx_fit->set_eval_file_name(vtxevalloc);
-  se->registerSubsystem(vtx_fit);
+  //VertexFit* vtx_fit = new VertexFit();
+  //vtx_fit->set_eval_file_name(vtxevalloc);
+  //se->registerSubsystem(vtx_fit);
+
+  SQVertexing* vtx = new SQVertexing();
+  vtx->set_legacy_rec_container(true);
+  se->registerSubsystem(vtx);
 
   Fun4AllInputManager* in = new Fun4AllDstInputManager("DSTIN");
   in->Verbosity(0);
