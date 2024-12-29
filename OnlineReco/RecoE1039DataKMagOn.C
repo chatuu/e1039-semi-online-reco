@@ -21,7 +21,7 @@ suitable for production use and users should develop their own reconstruction ma
 int RecoE1039DataKMagOn(const int run_id, const std::string DST_in="data.root", const int nEvents = 0)
 //int RecoE1039DataKMagOn(const std::string DST_in="data.root")
 {
-  const float fac = 3.0;
+  const float fac = 1.0;
 
   const bool legacy_rec_container = true;
   const double FMAGSTR = -1.044;
@@ -84,6 +84,7 @@ int RecoE1039DataKMagOn(const int run_id, const std::string DST_in="data.root", 
   reco->set_legacy_rec_container(legacy_rec_container);
   //reco->set_geom_file_name((string)gSystem->Getenv("E1039_RESOURCE") + "/geometry/geom_run005433.root");
   reco->set_geom_file_name("geom_run005433.root");
+  //reco->set_geom_file_name("geom.root");
   reco->set_enable_KF(true); //Kalman filter not needed for the track finding, disabling KF saves a lot of initialization time
   reco->setInputTy(SQReco::E1039);    //options are SQReco::E906 and SQReco::E1039
   reco->setFitterTy(SQReco::KFREF);  //not relavant for the track finding
@@ -95,10 +96,13 @@ int RecoE1039DataKMagOn(const int run_id, const std::string DST_in="data.root", 
     //reco->add_eval_list(2);    //output of cosmic reco is contained in the eval output for now
   reco->add_eval_list(3);    //output of cosmic reco is contained in the eval output for now
 
+
   reco->set_enable_eval(true);
   reco->set_eval_file_name("eval.root");
 
   se->registerSubsystem(reco);
+  //VertexFit* vtx_fit = new VertexFit();
+  //se->registerSubsystem(vtx_fit);
 
   SQVertexing* vtx = new SQVertexing();
   //vtx->Verbosity(21);
